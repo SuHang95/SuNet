@@ -1,3 +1,6 @@
+#ifndef __tcp_h__
+#define __tcp_h__
+
 #include<sys/socket.h>
 #include<unistd.h>
 #include<sys/types.h>
@@ -355,7 +358,7 @@ void tcp_server::close(){
 }
 
 
-
+#endif
 
 
 
