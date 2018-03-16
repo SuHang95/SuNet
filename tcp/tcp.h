@@ -225,7 +225,7 @@ public:
 		sockfd=socket(AF_INET,SOCK_STREAM,0);
 		if(sockfd<0){
                 	log.error("Socket file descriptor get fail:");
-			listen_flag=0;
+			listen_flag.store(0);
 			return;
         	}
 
@@ -237,9 +237,10 @@ public:
 		int ret=bind(sockfd,(struct sockaddr*)&address,address_len);		
 	        if(ret<0){
                 	log.error("bind fail!");
+			listen_flag.store(0);
         	}
 		else
-			listen_flag=1;
+			listen_flag.store(1);
 	}
 	tcp_server(in_addr_t addr,unsigned short int port,logger& _log):
 		log(_log),accept_flag(1){
@@ -247,7 +248,7 @@ public:
 		sockfd=socket(AF_INET,SOCK_STREAM,0);
 		if(sockfd<0){
                 	log.error("Socket file descriptor get fail:");
-			listen_flag=0;
+			listen_flag.store(0);
 			return;
         	}
 
@@ -259,9 +260,10 @@ public:
 		int ret=bind(sockfd,(struct sockaddr*)&address,address_len);
 	        if(ret<0){
                 	log.error("bind fail!");
+			listen_flag.store(0);
         	}
 		else
-			listen_flag=1;
+			listen_flag.store(1);
 	}
 	tcp_server(char* addr,unsigned short int port,logger& _log):
 		log(_log),accept_flag(1){
@@ -281,15 +283,16 @@ public:
 		int ret=bind(sockfd,(struct sockaddr*)&address,address_len);
 	        if(ret<0){
                 	log.error("bind fail!");
+			listen_flag.store(0);
         	}
 		else
-			listen_flag=1;
+			listen_flag.store(1);
 	}
 	virtual ~tcp_server(){
-		if((listen_flag==1) && (close_(sockfd)==-1)){
+		if((listen_flag.load()==1) && (close_(sockfd)==-1)){
 			log.error("close");
 		}	
-		listen_flag=0;
+		listen_flag.store(0);
 	}
  	virtual void accept(){
 		int client_sockfd;
